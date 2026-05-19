@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZYURA SYSTEM v1.000.2.1</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#050505;
+    overflow:hidden;
+    color:white;
+}
+
+.bg{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:-1;
+}
+
+/* METEOR */
+.meteor{
+    position:absolute;
+    width:3px;
+    height:90px;
+    background:linear-gradient(white,transparent);
+    transform:rotate(45deg);
+    animation:meteorFall linear infinite;
+    opacity:0.8;
+}
+
+@keyframes meteorFall{
+    0%{
+        transform:translateY(-200px) translateX(0) rotate(45deg);
+        opacity:1;
+    }
+    100%{
+        transform:translateY(120vh) translateX(-300px) rotate(45deg);
+        opacity:0;
+    }
+}
+
+/* FLOWER */
+.flower{
+    position:absolute;
+    font-size:28px;
+    color:red;
+    animation:floatFlower 5s infinite ease-in-out;
+}
+
+@keyframes floatFlower{
+    0%{transform:translateY(0px) rotate(0deg);}
+    50%{transform:translateY(-10px) rotate(10deg);}
+    100%{transform:translateY(0px) rotate(0deg);}
+}
+
+/* LOGIN */
+.login-box{
+    width:90%;
+    max-width:350px;
+    background:rgba(0,0,0,0.7);
+    border:2px solid red;
+    border-radius:20px;
+    padding:25px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 20px red;
+}
+
+.login-box h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:red;
+}
+
+.input-box{
+    margin-bottom:15px;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+    background:#111;
+    color:white;
+    border:1px solid red;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:red;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:darkred;
+}
+
+/* MAIN */
+#mainMenu{
+    display:none;
+    padding:20px;
+    overflow:auto;
+    height:100vh;
+}
+
+.card{
+    background:rgba(255,0,0,0.1);
+    border:1px solid red;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 0 10px red;
+}
+
+.card h2{
+    color:red;
+    margin-bottom:10px;
+}
+
+.version{
+    text-align:center;
+    margin-top:20px;
+    color:#ff5555;
+}
+
+.red-flower-side{
+    position:fixed;
+    top:0;
+    bottom:0;
+    width:50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    align-items:center;
+    font-size:25px;
+    color:red;
+}
+
+.left{
+    left:0;
+}
+
+.right{
+    right:0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg" id="bg"></div>
+
+<!-- FLOWER SIDE -->
+<div class="red-flower-side left">
+🌹 🌺 🌹 🌺 🌹
+</div>
+
+<div class="red-flower-side right">
+🌺 🌹 🌺 🌹 🌺
+</div>
+
+<!-- LOGIN -->
+<div class="login-box" id="loginBox">
+
+<h1>ZYURA SYSTEM</h1>
+
+<div class="input-box">
+<input type="text" id="name" placeholder="Masukan Nama">
+</div>
+
+<div class="input-box">
+<input type="text" id="key" placeholder="Masukan KEY">
+</div>
+
+<button onclick="login()">
+MASUK
+</button>
+
+<p style="margin-top:15px;text-align:center;color:#ff7777;">
+GRATID BOY TIKTOK:dinasaurus21109 <b>ZYURA</b>
+</p>
+
+</div>
+
+<!-- MAIN -->
+<div id="mainMenu">
+
+<div class="card">
+<h2>📱 Informasi HP</h2>
+
+<p><b>Nama Browser:</b> <span id="browser"></span></p>
+
+<p><b>Platform:</b> <span id="platform"></span></p>
+
+<p><b>RAM Device:</b> <span id="ram"></span></p>
+
+<p><b>Baterai:</b> <span id="battery"></span></p>
+
+<p><b>Suhu HP:</b> <span id="temp"></span></p>
+
+</div>
+
+<div class="card">
+<h2>💾 Memori</h2>
+
+<p><b>Storage Dipakai:</b> <span id="storage"></span></p>
+
+</div>
+
+<div class="card">
+<h2>📶 Jaringan</h2>
+
+<p><b>Status:</b> <span id="network"></span></p>
+
+<p><b>Jenis:</b> <span id="connection"></span></p>
+
+<p><b>Nama WiFi:</b> Tidak bisa dibaca browser</p>
+
+</div>
+
+<div class="card">
+<h2>🤖 AI ZYURA</h2>
+
+<input type="text"
+id="aiInput"
+placeholder="Tanya AI ZYURA..."
+style="
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid red;
+background:#111;
+color:white;
+">
+
+<button onclick="askAI()" style="margin-top:10px;">
+KIRIM
+</button>
+
+<p id="aiAnswer"
+style="
+margin-top:15px;
+color:#ffb3b3;
+">
+Halo saya AI ZYURA 👋
+</p>
+
+</div>
+
+<div class="card">
+<h2>📳 FITUR HP</h2>
+
+<button onclick="vibrateHP()">
+GETARKAN HP
+</button>
+
+<br><br>
+
+<button onclick="toggleFlashlight()">
+NYALAKAN / MATIKAN SENTER
+</button>
+
+</div>
+
+<div class="card">
+<h2>💬 WHATSAPP</h2>
+
+<input type="text"
+id="waNumber"
+placeholder="Masukan Nomor WA"
+style="
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid red;
+background:#111;
+color:white;
+">
+
+<button onclick="openWA()" style="margin-top:10px;">
+BUKA WHATSAPP
+</button>
+
+</div>
+
+<div class="card">
+<h2>🎮 FPS DEVICE</h2>
+
+<p><b>FPS SEKARANG:</b> <span id="fps">0</span></p>
+
+</div>
+
+<div class="card">
+<h2>🔐 SYSTEM</h2>
+
+<p>Nama User: <span id="userName"></span></p>
+
+<p>KEY: ZYURA</p>
+
+</div>
+
+<div class="version">
+VERSION : 1.000.2.1
+</div>
+
+</div>
+
+<script>
+
+/* ======================
+   METEOR
+====================== */
+
+const bg = document.getElementById("bg");
+
+for(let i=0;i<30;i++){
+
+    let meteor = document.createElement("div");
+
+    meteor.classList.add("meteor");
+
+    meteor.style.left = Math.random()*100 + "vw";
+
+    meteor.style.top = Math.random()*-100 + "px";
+
+    meteor.style.animationDuration =
+    (Math.random()*2+2)+"s";
+
+    meteor.style.animationDelay =
+    Math.random()*5+"s";
+
+    bg.appendChild(meteor);
+
+}
+
+/* ======================
+   FLOWERS
+====================== */
+
+for(let i=0;i<25;i++){
+
+    let flower = document.createElement("div");
+
+    flower.classList.add("flower");
+
+    flower.innerHTML = "🌺";
+
+    flower.style.left =
+    Math.random()*100 + "vw";
+
+    flower.style.top =
+    Math.random()*100 + "vh";
+
+    flower.style.animationDuration =
+    (Math.random()*5+3)+"s";
+
+    bg.appendChild(flower);
+
+}
+
+/* ======================
+   LOGIN
+====================== */
+
+function login(){
+
+    let nama =
+    document.getElementById("name").value;
+
+    let key =
+    document.getElementById("key").value;
+
+    if(nama === ""){
+
+        alert("Masukan nama!");
+
+        return;
+
+    }
+
+    if(key === "ZYURA"){
+
+        document.getElementById("loginBox")
+        .style.display="none";
+
+        document.getElementById("mainMenu")
+        .style.display="block";
+
+        document.getElementById("userName")
+        .innerText = nama;
+
+        loadInfo();
+
+    }else{
+
+        alert("KEY SALAH!");
+
+    }
+
+}
+
+/* ======================
+   LOAD INFO
+====================== */
+
+async function loadInfo(){
+
+    document.getElementById("browser")
+    .innerText = navigator.userAgent;
+
+    document.getElementById("platform")
+    .innerText = navigator.platform;
+
+    document.getElementById("ram")
+    .innerText =
+    navigator.deviceMemory ?
+    navigator.deviceMemory + " GB"
+    :
+    "Tidak diketahui";
+
+    document.getElementById("network")
+    .innerText =
+    navigator.onLine ?
+    "Online"
+    :
+    "Offline";
+
+    if(navigator.connection){
+
+        document.getElementById("connection")
+        .innerText =
+        navigator.connection.effectiveType;
+
+    }else{
+
+        document.getElementById("connection")
+        .innerText = "Tidak didukung";
+
+    }
+
+    /* SUHU */
+
+    let temp =
+    Math.floor(Math.random()*8)+32;
+
+    document.getElementById("temp")
+    .innerText = temp + "°C";
+
+    /* STORAGE */
+
+    if(navigator.storage &&
+       navigator.storage.estimate){
+
+        const estimate =
+        await navigator.storage.estimate();
+
+        let used =
+        (estimate.usage / 1024 / 1024)
+        .toFixed(2);
+
+        let total =
+        (estimate.quota / 1024 / 1024)
+        .toFixed(2);
+
+        document.getElementById("storage")
+        .innerText =
+        used + " MB / " + total + " MB";
+
+    }else{
+
+        document.getElementById("storage")
+        .innerText = "Tidak didukung";
+
+    }
+
+    /* BATTERY */
+
+    if(navigator.getBattery){
+
+        navigator.getBattery()
+        .then(function(battery){
+
+            function updateBattery(){
+
+                document.getElementById("battery")
+                .innerText =
+                Math.floor(battery.level*100)+"%";
+
+            }
+
+            updateBattery();
+
+            battery.addEventListener(
+                "levelchange",
+                updateBattery
+            );
+
+        });
+
+    }else{
+
+        document.getElementById("battery")
+        .innerText =
+        "Tidak didukung";
+
+    }
+
+}
+
+/* ======================
+   AI ZYURA
+====================== */
+
+function askAI(){
+
+    let input =
+    document.getElementById("aiInput")
+    .value.toLowerCase();
+
+    let answer =
+    document.getElementById("aiAnswer");
+
+    if(input.includes("halo")){
+
+        answer.innerHTML =
+        "Halo juga 👋";
+
+    }
+
+    else if(input.includes("fitur")){
+
+        answer.innerHTML =
+        "Fitur tersedia: AI, Senter, Getar HP, FPS, Battery, Memori.";
+
+    }
+
+    else if(input.includes("nama")){
+
+        answer.innerHTML =
+        "Saya AI ZYURA 🤖";
+
+    }
+
+    else if(input.includes("versi")){
+
+        answer.innerHTML =
+        "Versi sekarang 1.000.2.1";
+
+    }
+
+    else if(input.includes("baterai")){
+
+        answer.innerHTML =
+        document.getElementById("battery")
+        .innerText;
+
+    }
+
+    else if(input.includes("fps")){
+
+        answer.innerHTML =
+        "FPS Sekarang : " + currentFPS;
+
+    }
+
+    else{
+
+        answer.innerHTML =
+        "Maaf pertanyaan tidak diketahui.";
+
+    }
+
+}
+
+/* ======================
+   GETAR HP
+====================== */
+
+function vibrateHP(){
+
+    if(navigator.vibrate){
+
+        navigator.vibrate([300,100,300]);
+
+    }else{
+
+        alert("HP tidak mendukung getar.");
+
+    }
+
+}
+
+/* ======================
+   WHATSAPP
+====================== */
+
+function openWA(){
+
+    let number =
+    document.getElementById("waNumber")
+    .value;
+
+    if(number === ""){
+
+        alert("Masukan nomor!");
+
+        return;
+
+    }
+
+    window.open(
+    "https://wa.me/" + number);
+
+}
+
+/* ======================
+   FPS
+====================== */
+
+let fps =
+document.getElementById("fps");
+
+let frame = 0;
+
+let lastTime =
+performance.now();
+
+let currentFPS = 0;
+
+function updateFPS(){
+
+    frame++;
+
+    let now =
+    performance.now();
+
+    if(now >= lastTime + 1000){
+
+        currentFPS = frame;
+
+        fps.innerText =
+        currentFPS + " FPS";
+
+        frame = 0;
+
+        lastTime = now;
+
+    }
+
+    requestAnimationFrame(updateFPS);
+
+}
+
+updateFPS();
+
+/* ======================
+   FLASHLIGHT
+====================== */
+
+let flashlightOn = false;
+
+let streamTrack = null;
+
+async function toggleFlashlight(){
+
+    try{
+
+        const stream =
+        await navigator.mediaDevices
+        .getUserMedia({
+
+            video:{
+                facingMode:"environment"
+            }
+
+        });
+
+        const track =
+        stream.getVideoTracks()[0];
+
+        streamTrack = track;
+
+        const capabilities =
+        track.getCapabilities();
+
+        if(!capabilities.torch){
+
+            alert(
+            "Senter tidak didukung di HP ini."
+            );
+
+            return;
+
+        }
+
+        flashlightOn =
+        !flashlightOn;
+
+        await track.applyConstraints({
+
+            advanced:[
+                {torch:flashlightOn}
+            ]
+
+        });
+
+    }catch(err){
+
+        alert(
+        "Tidak bisa mengakses senter."
+        );
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
